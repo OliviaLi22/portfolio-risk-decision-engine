@@ -1,0 +1,24 @@
+{
+  "name": "Growth Tilted Multi Asset",
+  "illustrative": true,
+  "weights": {"SPY": 0.50, "QQQ": 0.25, "IWM": 0.10, "IEF": 0.10, "GLD": 0.05},
+  "benchmark_weights": {"SPY": 1.0},
+  "start": "2018-01-01",
+  "end_exclusive": "2026-01-01",
+  "annualization_days": 252,
+  "minimum_price_observations": 252,
+  "optimization": {
+    "max_tracking_error": 0.25,
+    "max_asset_weight": 0.60,
+    "max_turnover": 0.15,
+    "transaction_cost_bps": 5.0,
+    "tracking_error_weight": 1.0,
+    "stress_loss_weight": 0.5,
+    "trading_cost_weight": 1.0
+  },
+  "stress_windows": [
+    {"name": "COVID-19 equity selloff", "start": "2020-02-19", "end": "2020-03-23"},
+    {"name": "2022 equity/bond drawdown", "start": "2022-01-03", "end": "2022-10-14"}
+  ],
+  "walk_forward": {"start": "2023-01-01", "lookback_days": 252, "rebalance_every_days": 63}
+}

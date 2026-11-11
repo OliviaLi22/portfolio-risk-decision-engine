@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102c30">
+  <meta name="description" content="An evidence-led view of ETF portfolio risk, constrained rebalancing, and the robustness of historical results.">
+  <title>Portfolio Risk · Decision Engine</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to dashboard</a>
+  <aside class="sidebar">
+    <a class="brand" href="#overview" aria-label="Portfolio Risk Decision Engine home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 24V15m7 9V8m7 16V12m7 12V4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>
+      <span>Portfolio Risk<small>DECISION ENGINE</small></span>
+    </a>
+    <div class="nav-label">RESEARCH WORKSPACE</div>
+    <nav class="main-nav" aria-label="Dashboard sections">
+      <a class="active" href="#overview"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="3" y="12" width="5" height="5" rx="1"/><rect x="12" y="12" width="5" height="5" rx="1"/></svg>Overview<span>01</span></a>
+      <a href="#rebalancing"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14m-3-3 3 3-3 3M17 14H3m3-3-3 3 3 3"/></svg>Rebalancing<span>02</span></a>
+      <a href="#robustness"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 2 7 3v5c0 4-7 8-7 8s-7-4-7-8V5z"/><path d="m7 10 2 2 4-4"/></svg>Robustness<span>03</span></a>
+      <a href="#methodology"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 3h8l3 3v11H5zM12 3v4h4M8 10h5m-5 3h5"/></svg>Methodology<span>04</span></a>
+    </nav>
+    <div class="sidebar-portfolio">
+      <span class="eyebrow">ILLUSTRATIVE MANDATE</span>
+      <p id="sidebar-name">Growth Tilted<br>Multi Asset</p>
+      <div class="ticker-list" id="sidebar-tickers"><span>SPY</span><span>QQQ</span><span>IWM</span><span>IEF</span><span>GLD</span></div>
+      <div class="sidebar-benchmark"><span class="small-dot"></span>Benchmark · SPY</div>
+    </div>
+    <div class="sidebar-footer"><span class="status-square"></span>Research, made inspectable.<small>Historical evidence · Explicit assumptions</small></div>
+  </aside>
+
+  <div class="workspace">
+    <header class="topbar">
+      <div class="breadcrumb">Research workspace <span>/</span> <strong>Portfolio overview</strong></div>
+      <div class="header-actions">
+        <button class="button text-button" id="provenance-button"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 9v5m0-8v.1"/></svg>Data details</button>
+        <button class="button export-button" id="export-button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v9m-3-3 3 3 3-3M4 13v4h12v-4"/></svg>Export snapshot</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="overview" class="section-anchor">
+        <div class="page-heading">
+          <div><div class="eyebrow">PORTFOLIO INTELLIGENCE</div><h1>The decision, in perspective.</h1><p>A clear view of risk, return, and the cost of changing course.</p></div>
+          <div class="snapshot-meta"><span class="data-badge" id="data-badge"><span></span>Historical snapshot</span><span id="sample-dates">Awaiting saved market data</span></div>
+        </div>
+        <div id="unavailable-message" class="unavailable" hidden><strong>Results are not available yet.</strong><p>Download the market history and run the analysis to populate this dashboard. No sample performance is shown.</p><code>uv run python -m portfolio_risk_decision_engine.run_analysis dashboard</code></div>
+        <div class="decision-hero">
+          <div class="hero-copy"><div class="eyebrow">THE CURRENT CONCLUSION</div><h2 id="conclusion-title">Evidence before conviction.</h2><p id="conclusion-body">Historical results and sensitivity checks will appear here once the analysis is available.</p><div class="hero-labels"><span>Out-of-sample evidence</span><span>Costs included</span><span>Assumptions visible</span></div></div>
+          <div class="hero-aside"><span class="hero-symbol" aria-hidden="true"><svg viewBox="0 0 80 80"><path d="M13 53 30 35l13 10 25-29M49 16h19v19"/><path d="M13 69h55"/></svg></span><span class="eyebrow">DECISION PRINCIPLE</span><p>Less stress exposure can come with a different risk.</p><a href="#robustness">Inspect the evidence <span aria-hidden="true">↗</span></a></div>
+        </div>
+        <div class="metric-grid" id="metric-grid" aria-label="Out-of-sample optimized strategy metrics"></div>
+
+        <div class="overview-grid">
+          <article class="panel wealth-panel">
+            <div class="panel-heading"><div><div class="eyebrow">WALK-FORWARD VALIDATION</div><h2>What happened after each decision</h2><p id="wealth-dates">Net wealth · Growth of $1</p></div><div class="segmented" role="group" aria-label="Chart time period"><button data-period="1y">1Y</button><button data-period="all" class="selected" aria-pressed="true">Full period</button></div></div>
+            <div class="chart-strategies" id="strategy-toggles" role="group" aria-label="Visible strategies"></div>
+            <div class="wealth-chart" id="wealth-chart"><svg id="wealth-svg" viewBox="0 0 900 340" role="img" aria-labelledby="wealth-title wealth-description"><title id="wealth-title">Out-of-sample net wealth by strategy</title><desc id="wealth-description">A line chart of observed portfolio growth. Use the strategy buttons to compare approaches.</desc></svg><div class="chart-tooltip" id="chart-tooltip" hidden></div></div>
+            <p class="chart-note" id="chart-summary">All strategies use the same ETF history and trading-cost assumptions.</p>
+          </article>
+          <article class="panel evidence-panel"><div class="eyebrow">READING THE RESULT</div><h2>Three things to take away</h2><div id="conclusion-list" class="evidence-list"></div><div class="evidence-footer"><span class="outlined-dot"></span>Historical comparison, not a forecast</div></article>
+        </div>
+
+        <article class="panel comparison-panel"><div class="panel-heading"><div><div class="eyebrow">IDENTICAL DATES · IDENTICAL COST MODEL</div><h2>One comparison. Every trade-off.</h2></div><span class="subtle-tag">Out of sample</span></div><div class="table-scroll"><table><caption class="sr-only">Walk-forward strategy comparison, net of modeled transaction costs</caption><thead><tr><th>Strategy</th><th>Net return</th><th>Realized tracking error</th><th>Historical stress exposure<sup>1</sup></th><th>Total turnover</th><th>Trading cost</th></tr></thead><tbody id="comparison-body"></tbody></table></div><p class="table-note"><sup>1</sup> Mean loss exposure to the same past stress windows at decision dates. This is not a subsequently realized loss.</p></article>
+      </section>
+
+      <section id="rebalancing" class="section-anchor">
+        <div class="section-heading"><div><div class="eyebrow">THE ALLOCATION DECISION</div><h2>Where the risk moves.</h2><p>A retrospective decision at the final sample close. Separate from the walk-forward test.</p></div><span class="subtle-tag">Final-date diagnostics</span></div>
+        <div class="allocation-grid">
+          <article class="panel allocation-panel"><div class="panel-heading"><div><h3>A deliberate change in weights</h3><p>Initial portfolio → optimized target</p></div><div class="compact-legend"><span><i class="legend-dot before"></i>Before</span><span><i class="legend-dot optimized"></i>Optimized</span></div></div><div id="allocation-chart" class="allocation-chart"></div><div class="constraint-strip" id="constraints"></div></article>
+          <article class="panel stress-panel"><div class="panel-heading"><div><h3>How the allocation meets a crisis</h3><p>Observed, buy-and-hold window returns</p></div></div><div class="compact-legend"><span><i class="legend-dot before"></i>Before</span><span><i class="legend-dot optimized"></i>Optimized</span><span><i class="legend-dot benchmark"></i>SPY</span></div><div id="stress-chart" class="stress-chart"></div><p class="chart-note">The optimizer sees these completed windows. Different crises may produce different outcomes.</p></article>
+        </div>
+        <div class="terminal-summary" id="terminal-summary"></div>
+      </section>
+
+      <section id="robustness" class="section-anchor">
+        <div class="section-heading"><div><div class="eyebrow">CHALLENGE THE CONCLUSION</div><h2>Does the result hold up?</h2><p>Change one assumption at a time. Keep the uncomfortable outcomes visible.</p></div><span class="subtle-tag" id="robustness-count">Sensitivity analysis</span></div>
+        <div id="robustness-findings" class="robustness-findings"></div>
+        <article class="panel sensitivity-panel"><div class="panel-heading"><div><h3>The same test, different assumptions</h3><p>Out-of-sample outcomes · Failed variants retain their original constraints</p></div><div class="sensitivity-controls"><label><span class="sr-only">Filter sensitivity runs</span><select id="sensitivity-filter"><option value="all">All runs</option><option value="feasible">Completed runs</option><option value="failed">Failed runs</option></select></label><label><span class="sr-only">Sort sensitivity runs</span><select id="sensitivity-sort"><option value="original">Default order</option><option value="te">Tracking error ↑</option><option value="return">Net return ↓</option><option value="stress">Stress exposure ↑</option></select></label></div></div><div class="table-scroll"><table><caption class="sr-only">Sensitivity of walk-forward performance to modeling assumptions</caption><thead><tr><th>Model variant</th><th>Net return</th><th>Realized TE</th><th>Stress exposure<sup>1</sup></th><th>Turnover</th><th>Outcome</th></tr></thead><tbody id="sensitivity-body"></tbody></table></div><p class="table-note">Sensitivity is evidence about these settings and this period. It does not establish that a strategy is robust to every future regime.</p></article>
+        <article class="panel bootstrap-panel"><div><div class="eyebrow">SAMPLING UNCERTAINTY</div><h3>How much confidence does this path support?</h3><p>A paired block bootstrap preserves short stretches of daily observations and compares the same resampled dates.</p><p class="bootstrap-caveat" id="bootstrap-caveat">Intervals are conditional on the observed strategy paths. They do not include uncertainty from re-estimating or re-optimizing the model.</p></div><div id="bootstrap-stats" class="bootstrap-stats"></div></article>
+      </section>
+
+      <section id="methodology" class="section-anchor">
+        <div class="section-heading"><div><div class="eyebrow">WHAT SITS BENEATH THE NUMBERS</div><h2>Transparent by design.</h2><p>These choices define what the dashboard can tell you.</p></div></div>
+        <div class="method-grid"><article class="panel method-card"><span class="method-index">01</span><h3>Observed market history</h3><p>Yahoo Finance adjusted ETF closes. Complete saved observations, no forward-filled price gaps, and 252 trading days per year.</p></article><article class="panel method-card"><span class="method-index">02</span><h3>Two views of risk</h3><p>Full-history diagnostics use daily constant weights. Historical stress uses buy-and-hold window returns. Walk-forward holdings drift between decisions.</p></article><article class="panel method-card"><span class="method-index">03</span><h3>Decisions from prior data</h3><p>Covariance is estimated before each held return. Configured historical stress windows ended before the walk-forward period began.</p></article></div>
+        <details class="limitations panel" open><summary>Model limits and assumptions to review <span aria-hidden="true">+</span></summary><ul id="limitations-list"></ul></details>
+      </section>
+      <footer class="footer"><div><strong>Portfolio Risk Decision Engine</strong><span>Illustrative research · Historical evidence</span></div><span id="generated-at">Saved analysis snapshot</span></footer>
+    </main>
+  </div>
+  <dialog id="provenance-dialog" aria-labelledby="provenance-title"><div class="dialog-heading"><h2 id="provenance-title">About this snapshot</h2><button id="close-dialog" aria-label="Close data details">×</button></div><p>Data provenance and evaluation boundaries for the displayed results.</p><dl id="provenance-list"></dl><p class="dialog-note">The dashboard is a saved snapshot. Refresh the Python analysis and dashboard export to reflect changed data or assumptions.</p></dialog>
+</body>
+</html>
